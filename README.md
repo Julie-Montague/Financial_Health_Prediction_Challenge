@@ -1,3 +1,12 @@
 # Financial_Health_Prediction_Challenge
 ## INTRODUCTION
 The small and medium enterprise (SME) sector in Southern Africa represents the most critical frontier for economic development, employment creation, and social innovation. Across Eswatini, Lesotho, Zimbabwe, and Malawi, these businesses operate as the primary livelihood for millions, yet they remain fundamentally fragile and largely excluded from the formal financial systems that might otherwise provide stability during times of crisis. Traditional economic metrics, such as annual profit or gross revenue, are increasingly recognized as insufficient for capturing the actual well-being of an SME in a developing economy. Instead, a more nuanced understanding is required—one that considers the interdependencies between savings habits, debt management, resilience to idiosyncratic shocks, and the qualitative nature of financial inclusion. The Financial Health Index (FHI) addresses this need by providing a composite measure that classifies enterprises into Low, Medium, or High financial health. However, the construction of reliable machine learning models to predict the FHI is hampered by the nature of the primary data source: survey responses that are frequently incomplete, inconsistent, and influenced by a complex array of behavioral and cultural factors.
+
+## FINANCIAL HEALTH INDEX (FHI) DEFINED 
+The FHI serves as a redefined metric for SME wellbeing, moving the focus from simple profitability to a holistic view of resilience and opportunity. The index is built across 4 dimensions. These dimensions are not isolated; they interact in ways that provide hidden information for data recovery.
+| Dimension | Definition | Dataset proxies | 
+| :--- | :--- | :--- | 
+| **Savings & Assets** | The accumulation of liquid and fixed capital to support business continuity. | personal_income, has_credit_card, has_debit_card, uses_friends_family_savings  | 
+| **Debt & Repayment** | The ability to service liabilities without compromising operational integrity. | has_loan_account, offers_credit_to_customers, business_expenses  | 
+| **Resilience to shocks** | Buffers against unexpected events like climate events or health crises. | has_insurance, medical_insurance, attitude_worried_shutdown  | 
+| **Access to credit** | Integration into formal and informal financial service networks. | has_mobile_money, has_internet_banking, problem_sourcing_money  | 
