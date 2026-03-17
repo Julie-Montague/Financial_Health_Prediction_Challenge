@@ -142,19 +142,55 @@ flowchart LR
 * **Cleanlab Label Purification:** Survey data is full of human error. By using a highly constrained, shallow LightGBM "Judge," the pipeline flags rows where the Out-Of-Fold probability violently disagrees with the human label. By *dropping* these mathematically improbable rows (rather than attempting to relabel them), the final models learn on a 100% purified, contradiction-free dataset.
 
 ## MODEL EVALUATION AND SELECTION PIPELINE
-A single 80/20 split was used to generate the train and validation set. Early stopping was also used for tree models. 
-To ensure maximum predictive power and prevent overfitting, the modeling phase evaluates a diverse pool of gradient boosting algorithms using a strict validation protocol.
+### 1. Stratified Validation & Early Stopping
+Models are not trained blindly for a set number of epochs. Evaluation relies on a strict **Stratified 80/20 Validation Split**, ensuring the exact distribution of Low/Medium/High classes is preserved in the holdout set. Furthermore, **Early Stopping** is actively monitored on the validation set. Once a model stops improving its Out-Of-Fold F1-Score, training is halted, the exact optimal tree count is locked in, and the model is refit on 100% of the data to prevent data leakage and overfitting.
 
-### 1. The Evaluation Metric: Weighted F1-Score
+### 2. The Evaluation Metric: Weighted F1-Score
 The primary optimization metric for this pipeline is the **Weighted F1-Score**. Because the dataset suffers from severe class imbalance (the vast majority of SMEs are in the "Low" health tier), relying on standard Accuracy would be highly misleading. The Weighted F1-Score calculates the harmonic mean of precision and recall for each class and weights them by their actual support in the data, strictly penalizing models that lazily guess the majority class.
 
-### 2. The Dual-Pipeline Strategy (Standard vs. Patterns)
+### 3. The Dual-Pipeline Strategy (Standard vs. Patterns)
 For every base algorithm tested (**Random Forest**, **Extra Trees**, **XGBoost**, and **CatBoost**), the pipeline automatically generates and evaluates two distinct variations:
 * **The "Standard" Pipeline:** Feeds the model the cleaned data alongside the core domain ratios (e.g., Burn Rate, Formalization Index).
 * **The "Patterns" Pipeline:** Injects the highly complex, unsupervised features (e.g., K-Means Maturity Clusters, High-Value Interactions).
 *(By testing both, the ensemble engine can later blend a "Standard" model that learned broad macroscopic trends with a "Patterns" model that captured hyper-specific edge cases).*
 
-### 3. Stratified Validation & Early Stopping
-Models are not trained blindly for a set number of epochs. Evaluation relies on a strict **Stratified 80/20 Validation Split**, ensuring the exact distribution of Low/Medium/High classes is preserved in the holdout set. Furthermore, **Early Stopping** is actively monitored on the validation set. Once a model stops improving its Out-Of-Fold F1-Score, training is halted, the exact optimal tree count is locked in, and the model is refit on 100% of the data to prevent data leakage and overfitting.
+### 4.Ensembling Strategy: Optuna-Optimized Soft Voting
+
+To generate the final predictions, the pipeline moves away from relying on a single algorithm and instead utilizes a highly optimized **Weighted Soft Voting Ensemble**. 
+
+#### 4.1. Top-K Filtering (Preventing Ensemble Dilution)
+A common pitfall in machine learning is averaging *all* trained models together, which allows weaker algorithms to drag down the accuracy of the best ones. To prevent this, the pipeline strictly enforces a **Top-K cutoff**. Only the elite, top-performing models (based strictly on Out-Of-Fold weighted F1 validation scores) are granted voting rights in the final ensemble.
+
+#### 4.2. Optuna Weight Optimization
+Instead of using a naive simple average (e.g., giving LightGBM, XGBoost, and CatBoost an equal 33% say), the engine leverages **Optuna (Tree-structured Parzen Estimator)**. Optuna runs hundreds of trials on the validation probabilities to discover the mathematically perfect fractional weights. For example, if LightGBM captured a vital macroeconomic trend, Optuna might dynamically assign it 55% voting power, while relegating CatBoost to 15%. 
+
+#### 4.3. Probability Fusion & Final Argmax
+Once the "Golden Weights" are discovered, the pipeline extracts the raw continuous probabilities (confidence levels) from the Top K models on the unseen Test Set. These probabilities are multiplied by their respective Optuna weights and stacked together. Finally, the default `Argmax` function collapses this fused probability matrix into the final discrete predictions (`Low`, `Medium`, `High`), yielding a submission that is significantly more robust than any individual model could achieve alone.
+
+### 4.4. The Hedged Fusion (Raw + Purified Blending)
+The final step of the pipeline mitigates the risks of both underfitting and overfitting to noise. We generate two separate Optuna-weighted ensembles: one trained on the **Raw Data** and one trained on the **Cleanlab Purified Data**. By fusing their probabilities together (e.g., a 50% Raw / 50% Clean split), we create a "Hedged Ensemble." The Raw models act as a grounded anchor to the true, messy real-world distribution, while the Purified models act as a precise mathematical corrector, pulling the predictions back into bounds when the raw models become overconfident on tricky, noisy edge cases.
+
+## 5. MODEL PERFORMANCE
+### 5.1 Top 3 Models before cleaning
+| model | F1 Weighted |
+|---|---:|
+| RandomForest_Patterns | 88.9182 | 
+| ExtraTrees_Standard | 88.7962 | 
+| ExtraTrees_Patterns | 88.7536 | 
+
+### 5.1 Top 3 Models on cleaned data
+| model | F1 Weighted |
+|---|---:|
+| RandomForest_Patterns | 88.9182 | 
+| ExtraTrees_Standard | 88.7962 | 
+| ExtraTrees_Patterns | 88.7536 | 
+
+### 5.4 Submission File Performance on Leaderboard
+| Submission | Public Leaderboard | Private Leaderboard |
+|---|---:|---:|
+| Base Blended Submission | 89.2907738 | 88.4738645 |
+| Base+cleaned Blended Submission  | 89.4169985 | 88.7214611 |
+
+
 
 
