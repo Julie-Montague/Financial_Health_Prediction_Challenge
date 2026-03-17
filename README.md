@@ -89,28 +89,28 @@ To counteract this and successfully capture the rare "High" performing SMEs, thi
 ## DATA PREPROCESSING AND FEATURE ENGINEERING
 ```mermaid
 graph TD
-    A[(Raw Survey Data<br>Eswatini, Lesotho, Malawi, Zimbabwe)] --&gt; B[Phase 1: FHIDataCleaner]
+    A[(Raw Survey Data<br>Eswatini, Lesotho, Malawi, Zimbabwe)] --> B[Phase 1: FHIDataCleaner]
     
     subgraph Pipeline [Scikit-Learn Feature Engineering Pipeline]
-        B --&gt;|Clean Text, Cap Outliers| C[Phase 2: FHIBaseSignals]
-        C --&gt;|Master Indices, Burn Rates, Missingness| D[Phase 3: FHIAdvancedSignals]
-        D --&gt;|Country Z-Scores, K-Means Clusters, MICE| E{Clean Dataset}
+        B -->|Clean Text, Cap Outliers| C[Phase 2: FHIBaseSignals]
+        C -->|Master Indices, Burn Rates, Missingness| D[Phase 3: FHIAdvancedSignals]
+        D -->|Country Z-Scores, K-Means Clusters, MICE| E{Clean Dataset}
     end
     
-    E --&gt; F[Confident Learning Protocol<br>Cleanlab Label Purifier]
+    E --> F[Confident Learning Protocol<br>Cleanlab Label Purifier]
     
-    subgraph Modeling [Modeling &amp; Ensembling]
-        F --&gt;|Drops 100+ Noisy Survey Rows| G[Train: Top K Models]
-        G --&gt; H(LightGBM)
-        G --&gt; I(XGBoost)
-        G --&gt; J(CatBoost)
+    subgraph Modeling [Modeling & Ensembling]
+        F -->|Drops 100+ Noisy Survey Rows| G[Train: Top K Models]
+        G --> H(LightGBM)
+        G --> I(XGBoost)
+        G --> J(CatBoost)
     end
     
-    H --&gt; K[Optuna Weighted Soft Voting]
-    I --&gt; K
-    J --&gt; K
+    H --> K[Optuna Weighted Soft Voting]
+    I --> K
+    J --> K
     
-    K --&gt; L(((Final FHI Prediction<br>Low / Medium / High)))
+    K --> L(((Final FHI Prediction<br>Low / Medium / High)))
 
     classDef tool fill:#f9f9f9,stroke:#333,stroke-width:2px;
     classDef model fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
