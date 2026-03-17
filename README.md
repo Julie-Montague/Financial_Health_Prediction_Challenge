@@ -87,6 +87,7 @@ To counteract this and successfully capture the rare "High" performing SMEs, thi
 | Psychological | attitude_more_successful_next_year | Optimism about stronger business performance in the coming year. |
 
 ## DATA PREPROCESSING AND FEATURE ENGINEERING
+```mermaid
 graph TD
     A[(Raw Survey Data<br>Eswatini, Lesotho, Malawi, Zimbabwe)] --&gt; B[Phase 1: FHIDataCleaner]
     
@@ -118,3 +119,4 @@ graph TD
     class B,C,D tool;
     class H,I,J,G model;
     class L target;
+```
