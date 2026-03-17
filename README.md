@@ -101,7 +101,7 @@ flowchart LR
     Prep --> Clean[Cleanlab Label Purifier]
     Clean -->|Drop Noisy Rows| Phase2[Phase 2: Train Purified Models]
     Phase2 --> TopK[Select Top K Clean Models]
-    TopK --> Probs(Clean Probabilities)
+    TopK --> Probs2(Clean Probabilities)
     
     %% Final Fusion
     Probs1 --> Blend{Hedged Probability Blend<br>e.g. 50% Raw / 50% Clean}
