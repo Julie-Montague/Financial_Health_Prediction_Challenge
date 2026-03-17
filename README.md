@@ -100,7 +100,7 @@ flowchart LR
     %% Phase 2: Cleanlab Purification
     Prep --> Clean[Cleanlab Label Purifier]
     Clean -->|Drop Noisy Rows| Phase2[Phase 2: Train Purified Models]
-    Phase2 --> Top K[Select Top K Clean Models]
+    Phase2 --> TopK[Select Top K Clean Models]
     TopK --> Probs(Clean Probabilities)
     
     %% Final Fusion
