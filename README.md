@@ -90,32 +90,38 @@ To counteract this and successfully capture the rare "High" performing SMEs, thi
 ```mermaid
 flowchart LR
     %% Data Ingestion & Prep
-    Data[(Raw Survey Data)] --> Prep[Feature Engineering Pipeline]
+    Data[(Raw Survey Data)] --> FE[Feature Engineering Pipeline]
     
-    %% Phase 1: Raw Baseline
-    Prep --> Phase1[Phase 1: Train Baseline Models]
-    Phase1 --> TopK1[Select Top K Raw Models]
-    TopK1 --> Probs1(Raw Probabilities)
+    %% Phase 1: Raw Baseline Track
+    FE --> P1[Train Phase 1 Baseline Models]
+    P1 --> Opt1{Optuna Weights}
+    Opt1 --> RawProbs(Blended Raw Probabilities)
     
-    %% Phase 2: Cleanlab Purification
-    Prep --> Clean[Cleanlab Label Purifier]
-    Clean -->|Drop Noisy Rows| Phase2[Phase 2: Train Purified Models]
-    Phase2 --> TopK[Select Top K Clean Models]
-    TopK --> Probs2(Clean Probabilities)
+    %% Phase 1 Output
+    RawProbs -->|Argmax| Sub1[\Baseline Submission CSV<br>Classes: Low/Med/High/]
     
-    %% Final Fusion
-    Probs1 --> Blend{Hedged Probability Blend<br>e.g. 50% Raw / 50% Clean}
-    Probs2 --> Blend
+    %% Phase 2: Cleanlab Track
+    FE --> CL[Cleanlab Label Purifier]
+    CL -->|Drop Noise| P2[Train Phase 2 Purified Models]
+    P2 --> Opt2{Optuna Weights}
+    Opt2 --> CleanProbs(Blended Clean Probabilities)
     
-    Blend --> Final(((Final FHI Prediction)))
+    %% Final Hedged Fusion Track
+    RawProbs --> Hedge{Hedged Blend<br>e.g., 60% Raw / 40% Clean}
+    CleanProbs --> Hedge
+    
+    %% Final Output
+    Hedge -->|Argmax| Sub2[\Final Hedged Submission CSV<br>Classes: Low/Med/High/]
 
     %% High-Contrast Styling (Dark Text on Light Backgrounds)
     classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#000;
     classDef highlight fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000;
     classDef accent fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000;
+    classDef file fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px,color:#000;
     classDef target fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px,color:#000;
     
-    class Phase1,Phase2,TopK1,TopK2 highlight;
-    class Clean,Blend accent;
-    class Final target;
+    class P1,P2,Opt1,Opt2 highlight;
+    class CL,Hedge accent;
+    class Sub1 file;
+    class Sub2 target;
 ```
