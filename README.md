@@ -29,7 +29,7 @@ As this is raw survey data, it authentically reflects the messy, subjective natu
 1. Train.csv : The training set, containing the survey features and the target variable.
 2. Test.csv : The test set. You must predict the financial health class for these unseen businesses.
 
-## Target Variable
+### Target Variable
 Target: The Financial Health Index (FHI) classification of the business.
   - Low (Highly vulnerable, informal, or distressed)
   - Medium (Stable but potentially lacking formal infrastructure)
