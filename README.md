@@ -136,7 +136,25 @@ flowchart LR
 
 ### 3. Handling Imbalance & Multicollinearity
 * **Custom SMOTE Ratios:** To combat the severe class imbalance, Synthetic Minority Over-sampling Technique (SMOTE) was used. However, instead of a naive 1:1:1 balance, custom ratios were applied to gently boost the ultra-rare "High" class without flooding the dataset with synthetic noise.
-* **Dynamic Correlation Drop:** A custom transformer automatically calculates a correlation matrix during training and drops heavily collinear features (Pearson > 0.95). This reduces dimensionality and prevents tree-based models from overfitting on redundant information.
+* **Dynamic Correlation Drop:** A custom transformer automatically calculates a correlation matrix during training and drops heavily collinear features (Pearson > 0.90). This reduces dimensionality and prevents tree-based models from overfitting on redundant information.
 
 ### 4. Confident Learning 
 * **Cleanlab Label Purification:** Survey data is full of human error. By using a highly constrained, shallow LightGBM "Judge," the pipeline flags rows where the Out-Of-Fold probability violently disagrees with the human label. By *dropping* these mathematically improbable rows (rather than attempting to relabel them), the final models learn on a 100% purified, contradiction-free dataset.
+
+## MODEL EVALUATION AND SELECTION PIPELINE
+A single 80/20 split was used to generate the train and validation set. Early stopping was also used for tree models. 
+To ensure maximum predictive power and prevent overfitting, the modeling phase evaluates a diverse pool of gradient boosting algorithms using a strict validation protocol.
+
+### 1. The Evaluation Metric: Weighted F1-Score
+The primary optimization metric for this pipeline is the **Weighted F1-Score**. Because the dataset suffers from severe class imbalance (the vast majority of SMEs are in the "Low" health tier), relying on standard Accuracy would be highly misleading. The Weighted F1-Score calculates the harmonic mean of precision and recall for each class and weights them by their actual support in the data, strictly penalizing models that lazily guess the majority class.
+
+### 2. The Dual-Pipeline Strategy (Standard vs. Patterns)
+For every base algorithm tested (**Random Forest**, **Extra Trees**, **XGBoost**, and **CatBoost**), the pipeline automatically generates and evaluates two distinct variations:
+* **The "Standard" Pipeline:** Feeds the model the cleaned data alongside the core domain ratios (e.g., Burn Rate, Formalization Index).
+* **The "Patterns" Pipeline:** Injects the highly complex, unsupervised features (e.g., K-Means Maturity Clusters, High-Value Interactions).
+*(By testing both, the ensemble engine can later blend a "Standard" model that learned broad macroscopic trends with a "Patterns" model that captured hyper-specific edge cases).*
+
+### 3. Stratified Validation & Early Stopping
+Models are not trained blindly for a set number of epochs. Evaluation relies on a strict **Stratified 80/20 Validation Split**, ensuring the exact distribution of Low/Medium/High classes is preserved in the holdout set. Furthermore, **Early Stopping** is actively monitored on the validation set. Once a model stops improving its Out-Of-Fold F1-Score, training is halted, the exact optimal tree count is locked in, and the model is refit on 100% of the data to prevent data leakage and overfitting.
+
+
