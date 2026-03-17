@@ -94,7 +94,7 @@ flowchart LR
     
     %% Phase 1: Raw Baseline Track
     FE --> P1[Train Phase 1 Baseline Models]
-    P1 --> Opt1{Optuna Weights}
+    P1 --> Opt1{Optuna Weights for the TOP 3 models}
     Opt1 --> RawProbs(Blended Raw Probabilities)
     
     %% Phase 1 Output
@@ -103,11 +103,11 @@ flowchart LR
     %% Phase 2: Cleanlab Track
     FE --> CL[Cleanlab Label Purifier]
     CL -->|Drop Noise| P2[Train Phase 2 Purified Models]
-    P2 --> Opt2{Optuna Weights}
+    P2 --> Opt2{Optuna Weights for the TOP 3 models}
     Opt2 --> CleanProbs(Blended Clean Probabilities)
     
     %% Final Hedged Fusion Track
-    RawProbs --> Hedge{Hedged Blend<br>e.g., 60% Raw / 40% Clean}
+    RawProbs --> Hedge{Hedged Blend<br>e.g., 50% Raw / 50% Clean}
     CleanProbs --> Hedge
     
     %% Final Output
