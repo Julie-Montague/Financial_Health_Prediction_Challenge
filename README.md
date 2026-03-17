@@ -89,25 +89,33 @@ To counteract this and successfully capture the rare "High" performing SMEs, thi
 ## DATA PREPROCESSING AND FEATURE ENGINEERING
 ```mermaid
 flowchart LR
-    A[(Raw Survey Data)] --> B[1. DataCleaner]
-    B -->|Sanitize & Cap| C[2. BaseSignals]
-    C -->|Domain Ratios| D[3. AdvSignals]
-    D -->|Z-Scores & MICE| E[4. Cleanlab Purifier]
+    %% Data Ingestion & Prep
+    Data[(Raw Survey Data)] --> Prep[Feature Engineering Pipeline]
     
-    E -->|Drop Noisy Rows| F(LightGBM)
-    E -->|Drop Noisy Rows| G(XGBoost)
-    E -->|Drop Noisy Rows| H(CatBoost)
+    %% Phase 1: Raw Baseline
+    Prep --> Phase1[Phase 1: Train Baseline Models]
+    Phase1 --> TopK1[Select Top K Raw Models]
+    TopK1 --> Probs1(Raw Probabilities)
     
-    F & G & H --> I{Optuna Weighted Blend}
-    I --> J(((FHI Prediction)))
+    %% Phase 2: Cleanlab Purification
+    Prep --> Clean[Cleanlab Label Purifier]
+    Clean -->|Drop Noisy Rows| Phase2[Phase 2: Train Purified Models]
+    Phase2 --> Top K[Select Top K Clean Models]
+    TopK --> Probs(Clean Probabilities)
+    
+    %% Final Fusion
+    Probs1 --> Blend{Hedged Probability Blend<br>e.g. 50% Raw / 50% Clean}
+    Probs2 --> Blend
+    
+    Blend --> Final(((Final FHI Prediction)))
 
-    classDef tool fill:#f9f9f9,stroke:#333,stroke-width:2px;
-    classDef model fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
-    classDef blend fill:#fff3e0,stroke:#e65100,stroke-width:2px;
-    classDef target fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px;
+    %% High-Contrast Styling (Dark Text on Light Backgrounds)
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px,color:#000;
+    classDef highlight fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000;
+    classDef accent fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000;
+    classDef target fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px,color:#000;
     
-    class B,C,D,E tool;
-    class F,G,H model;
-    class I blend;
-    class J target;
+    class Phase1,Phase2,TopK1,TopK2 highlight;
+    class Clean,Blend accent;
+    class Final target;
 ```
