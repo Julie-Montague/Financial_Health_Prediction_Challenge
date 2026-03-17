@@ -85,3 +85,36 @@ To counteract this and successfully capture the rare "High" performing SMEs, thi
 | Psychological | attitude_stable_business_environment | Confidence in the stability of the local business environment. |
 | Psychological | attitude_satisfied_with_achievement | Personal satisfaction with business progress to date. |
 | Psychological | attitude_more_successful_next_year | Optimism about stronger business performance in the coming year. |
+
+## DATA PREPROCESSING AND FEATURE ENGINEERING
+graph TD
+    A[(Raw Survey Data<br>Eswatini, Lesotho, Malawi, Zimbabwe)] --&gt; B[Phase 1: FHIDataCleaner]
+    
+    subgraph Pipeline [Scikit-Learn Feature Engineering Pipeline]
+        B --&gt;|Clean Text, Cap Outliers| C[Phase 2: FHIBaseSignals]
+        C --&gt;|Master Indices, Burn Rates, Missingness| D[Phase 3: FHIAdvancedSignals]
+        D --&gt;|Country Z-Scores, K-Means Clusters, MICE| E{Clean Dataset}
+    end
+    
+    E --&gt; F[Confident Learning Protocol<br>Cleanlab Label Purifier]
+    
+    subgraph Modeling [Modeling &amp; Ensembling]
+        F --&gt;|Drops 100+ Noisy Survey Rows| G[Train: Top K Models]
+        G --&gt; H(LightGBM)
+        G --&gt; I(XGBoost)
+        G --&gt; J(CatBoost)
+    end
+    
+    H --&gt; K[Optuna Weighted Soft Voting]
+    I --&gt; K
+    J --&gt; K
+    
+    K --&gt; L(((Final FHI Prediction<br>Low / Medium / High)))
+
+    classDef tool fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    classDef model fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef target fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px;
+    
+    class B,C,D tool;
+    class H,I,J,G model;
+    class L target;
