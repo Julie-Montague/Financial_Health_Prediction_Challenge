@@ -125,3 +125,18 @@ flowchart LR
     class Sub1 file;
     class Sub2 target;
 ```
+### 1. Robust Data Sanitization
+* **Country-Aware Winsorization:** Because Eswatini, Lesotho, Malawi, and Zimbabwe have vastly different currencies and inflation rates, extreme financial outliers were capped at the 99th percentile *per country*. This neutralized data-entry typos without erasing legitimate high-earning businesses.
+* **Logical Bounding:** Corrected impossible survey contradictions automatically (e.g., ensuring a business's age could not mathematically exceed the owner's working age).
+
+### 2. Feature Engineering & Unsupervised Extraction
+* **Domain-Driven Base Signals:** Translated raw survey text into mathematical indices. Created custom metrics like the `Master_Formalization_Index` (tracking tax and record-keeping compliance) and `Liquidity_Distress_Index` (multiplying high cash burn rates by negative psychological outlooks).
+* **Unsupervised Pattern Extraction (K-Means):** Applied log transformations to revenue and expenses, then used a K-Means clustering algorithm to group businesses into distinct "Financial Maturity Tiers," allowing the gradient boosters to immediately recognize scale.
+* **MICE Imputation:** Instead of filling missing continuous variables with a naive median, the pipeline uses Scikit-Learn's `IterativeImputer` (Multivariate Imputation by Chained Equations) to mathematically predict and fill missing values based on the business's other characteristics.
+
+### 3. Handling Imbalance & Multicollinearity
+* **Custom SMOTE Ratios:** To combat the severe class imbalance, Synthetic Minority Over-sampling Technique (SMOTE) was used. However, instead of a naive 1:1:1 balance, custom ratios were applied to gently boost the ultra-rare "High" class without flooding the dataset with synthetic noise.
+* **Dynamic Correlation Drop:** A custom transformer automatically calculates a correlation matrix during training and drops heavily collinear features (Pearson > 0.95). This reduces dimensionality and prevents tree-based models from overfitting on redundant information.
+
+### 4. Confident Learning 
+* **Cleanlab Label Purification:** Survey data is full of human error. By using a highly constrained, shallow LightGBM "Judge," the pipeline flags rows where the Out-Of-Fold probability violently disagrees with the human label. By *dropping* these mathematically improbable rows (rather than attempting to relabel them), the final models learn on a 100% purified, contradiction-free dataset.
