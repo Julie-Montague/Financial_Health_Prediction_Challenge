@@ -172,24 +172,28 @@ The final step of the pipeline mitigates the risks of both underfitting and over
 
 ## 5. MODEL PERFORMANCE
 ### 5.1 Top 3 Models before cleaning
-| model | F1 Weighted |
-|---|---:|
-| RandomForest_Patterns | 88.9182 | 
-| ExtraTrees_Standard | 88.7962 | 
-| ExtraTrees_Patterns | 88.7536 | 
+This was trained on the full dataset (9618 rows)
+| Model |  Ensemble Weight | F1 Weighted |
+|---|---|---:|
+| RandomForest_Patterns  | 0.6984 | 88.9182 | 
+| ExtraTrees_Standard  | 0.0005 | 88.7962 | 
+| ExtraTrees_Patterns | 0.3011 | 88.7536 |
 
-### 5.1 Top 3 Models on cleaned data
-| model | F1 Weighted |
-|---|---:|
-| RandomForest_Patterns | 88.9182 | 
-| ExtraTrees_Standard | 88.7962 | 
-| ExtraTrees_Patterns | 88.7536 | 
+### 5.1 Top 3 Models on cleaned data ( Out of the original 9618 rows, 638 rows were dropped)
+This was trained on 8,980 rows
+| Model |  Ensemble Weight | F1 Weighted |
+|---|---|---:|
+| RandomForest_Patterns  | 0.6243 | 93.0107 | 
+| ExtraTrees_Standard  | 0.1795 | 93.2664 | 
+| ExtraTrees_Patterns | 0.1962 | 92.9850 |  
 
 ### 5.4 Submission File Performance on Leaderboard
 | Submission | Public Leaderboard | Private Leaderboard |
 |---|---:|---:|
 | Base Blended Submission | 89.2907738 | 88.4738645 |
 | Base+cleaned Blended Submission  | 89.4169985 | 88.7214611 |
+
+## 6.DISCUSSION AND CONCLUSION
 
 
 
