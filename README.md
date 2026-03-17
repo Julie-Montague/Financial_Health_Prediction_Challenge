@@ -88,35 +88,26 @@ To counteract this and successfully capture the rare "High" performing SMEs, thi
 
 ## DATA PREPROCESSING AND FEATURE ENGINEERING
 ```mermaid
-graph TD
-    A[(Raw Survey Data<br>Eswatini, Lesotho, Malawi, Zimbabwe)] --> B[Phase 1: FHIDataCleaner]
+flowchart LR
+    A[(Raw Survey Data)] --> B[1. DataCleaner]
+    B -->|Sanitize & Cap| C[2. BaseSignals]
+    C -->|Domain Ratios| D[3. AdvSignals]
+    D -->|Z-Scores & MICE| E[4. Cleanlab Purifier]
     
-    subgraph Pipeline [Scikit-Learn Feature Engineering Pipeline]
-        B -->|Clean Text, Cap Outliers| C[Phase 2: FHIBaseSignals]
-        C -->|Master Indices, Burn Rates, Missingness| D[Phase 3: FHIAdvancedSignals]
-        D -->|Country Z-Scores, K-Means Clusters, MICE| E{Clean Dataset}
-    end
+    E -->|Drop Noisy Rows| F(LightGBM)
+    E -->|Drop Noisy Rows| G(XGBoost)
+    E -->|Drop Noisy Rows| H(CatBoost)
     
-    E --> F[Confident Learning Protocol<br>Cleanlab Label Purifier]
-    
-    subgraph Modeling [Modeling & Ensembling]
-        F -->|Drops 100+ Noisy Survey Rows| G[Train: Top K Models]
-        G --> H(LightGBM)
-        G --> I(XGBoost)
-        G --> J(CatBoost)
-    end
-    
-    H --> K[Optuna Weighted Soft Voting]
-    I --> K
-    J --> K
-    
-    K --> L(((Final FHI Prediction<br>Low / Medium / High)))
+    F & G & H --> I{Optuna Weighted Blend}
+    I --> J(((FHI Prediction)))
 
     classDef tool fill:#f9f9f9,stroke:#333,stroke-width:2px;
     classDef model fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef blend fill:#fff3e0,stroke:#e65100,stroke-width:2px;
     classDef target fill:#e8f5e9,stroke:#2e7d32,stroke-width:3px;
     
-    class B,C,D tool;
-    class H,I,J,G model;
-    class L target;
+    class B,C,D,E tool;
+    class F,G,H model;
+    class I blend;
+    class J target;
 ```
