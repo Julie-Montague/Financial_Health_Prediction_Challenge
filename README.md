@@ -34,5 +34,16 @@ Target: The Financial Health Index (FHI) classification of the business.
   - Low (Highly vulnerable, informal, or distressed)
   - Medium (Stable but potentially lacking formal infrastructure)
   - High (Resilient, formalized, and financially integrated)
-
-<img src="assets/overall_class_imbalance.png" width="400"><img src="assets/country_class_imbalance.png" width="400">
+    
+<p align="center">
+  <table>
+    <tr>
+      <td align="center"><img src="assets/overall_class_imbalance.png" width="400"></td>
+      <td align="center"><img src="assets/country_class_imbalance.png" width="400"></td>
+    </tr>
+    <tr>
+      <td align="center"><b>Overall Imbalance</b></td>
+      <td align="center"><b>Imbalance by Country</b></td>
+    </tr>
+  </table>
+</p>
