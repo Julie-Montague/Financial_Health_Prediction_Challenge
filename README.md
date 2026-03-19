@@ -233,6 +233,7 @@ This was trained on the full dataset (9618 rows)
 | **Medium** | 0.89 | 0.76 | 0.82 | 574 |
 | Overall Accuracy | | | 0.90 | 1924 |
 
+**Confusion Matrix**
 | | Predicted High Class | Predicted Low Class | Predicted Medium class |
 | :--- | :---: | :---: | :---: |
 | **Actual High Class** | **58** | 4 | 32 |
@@ -255,6 +256,7 @@ This was trained on 8,985 rows
 | **Medium** | 0.96 | 0.87 | 0.91 | 500 |
 | Overall Accuracy | | | 0.95 | 1707 |
 
+**Confusion Matrix**
 | | Predicted High Class | Predicted Low Class | Predicted Medium class |
 | :--- | :---: | :---: | :---: |
 | **Actual High Class** | **50** | 1 | 0 |
