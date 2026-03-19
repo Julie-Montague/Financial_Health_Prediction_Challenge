@@ -21,7 +21,7 @@ Develop a robust machine learning model to accurately predict the Financial Heal
 
 ## 4. SYSTEM ARCHITECTURE & EXECUTION GUIDE
 
-This section outlines the complete lifecycle of the pipeline, from the conceptual architecture down to the exact hardware and commands needed to reproduce the final Kaggle submission.
+This section outlines the complete lifecycle of the pipeline, from the conceptual architecture hardware and commands needed to reproduce the final submission.
 
 ### 4.1. Repository Layout
 To maintain a clean and modular codebase, the project is structured as follows:
