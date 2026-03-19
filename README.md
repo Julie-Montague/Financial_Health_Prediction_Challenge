@@ -227,6 +227,7 @@ This was trained on the full dataset (9618 rows)
 
 <details>
 <summary><strong>Click to expand classification reports</strong></summary>
+  
 **Classification Report (Weighted F1: 0.89)**
 | Class | Precision | Recall | F1-Score | Support (Rows) |
 | :--- | :--- | :--- | :--- | :--- |
@@ -253,6 +254,7 @@ This was trained on 8,985 rows
 
 <details>
 <summary><strong>Click to expand classification reports</strong></summary>
+  
 **Classification Report (Weighted F1: 0.95)**
 | Class | Precision | Recall | F1-Score | Support (Rows) |
 | :--- | :--- | :--- | :--- | :--- |
