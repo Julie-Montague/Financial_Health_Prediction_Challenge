@@ -221,9 +221,9 @@ The final step of the pipeline mitigates the risks of both underfitting and over
 This was trained on the full dataset (9618 rows)
 | Model | F1 Weighted | Ensemble Weight Assigned |
 |---|---|---:|
-| RandomForest_Patterns  | 88.9182 |  0.7105824251537074 |
-| ExtraTrees_Standard  |  88.7962 | 0.05200313738932137 |
-| ExtraTrees_Patterns | 88.7536 |  0.23741443745697116 |
+| RandomForest_Patterns  | 0.889182 |  0.7105824251537074 |
+| ExtraTrees_Standard  |  0.887962 | 0.05200313738932137 |
+| ExtraTrees_Patterns | 0.887536 |  0.23741443745697116 |
 
 <details>
 <summary><strong>Click to expand classification reports</strong></summary>
@@ -246,21 +246,23 @@ This was trained on the full dataset (9618 rows)
 **F1 Score by country**
 | Country | Total Samples (Test) | Weighted F1-Score | Note |
 | :--- | :---: | :---: | :--- |
-| **Zimbabwe** | *[Insert #]* | *[Insert F1]* | *e.g., Highest baseline accuracy.* |
-| **Malawi** | *[Insert #]* | *[Insert F1]* | *e.g., Model slightly underperforms here.* |
-| **Lesotho** | *[Insert #]* | *[Insert F1]* | |
-| **Eswatini** | *[Insert #]* | *[Insert F1]* | *Warning: Extremely low support for Class 0.* |
+| **Zimbabwe** | *511* | *0.9630* | *Highest baseline accuracy.* |
+| **Malawi** | *510* | *0.9170* |  |
+| **Lesotho** | *369* | *0.7447* | *Warning: Extremely low support for Class 'High'.* |
+| **Eswatini** | *534* | *0.8965* |  |
 
-> **Key Insight:** While the model remains relatively stable across borders, slight variations in the Weighted F1-Score are largely driven by severe class imbalances at the local level. For example, slicing our already rare `High class` (94 total samples) across four countries leaves certain regions with statistically insignificant support for that specific tier.
+
+> **Key Insight:** While the model remains relatively stable across borders, variations in the Weighted F1-Score are largely driven by severe class imbalances at the local level. For example, slicing our already rare `High` tier (only 94 total samples) across four countries leaves regions like Lesotho with statistically insignificant support for that specific class, inherently dragging down its localized weighted average.
+
 </details>
 
 ### 8.2 Top 3 Models on cleaned data ( Out of the original 9618 rows, 633 rows were dropped)
 This was trained on 8,985 rows
 | Model | F1 Weighted | Ensemble Weight Assigned |
 |---|---|---:|
-| ExtraTrees_Standard  | 94.9658 | 0.4566714412265409 |
-| ExtraTrees_Patterns  | 94.8519 | 0.24944312727789425 |
-| XGBoost_Standard | 94.5441 |  0.29388543149556484 |
+| ExtraTrees_Standard  | 0.949658 | 0.4566714412265409 |
+| ExtraTrees_Patterns  | 0.948519 | 0.24944312727789425 |
+| XGBoost_Standard | 0.945441 |  0.29388543149556484 |
 
 <details>
 <summary><strong>Click to expand classification reports</strong></summary>
@@ -271,7 +273,7 @@ This was trained on 8,985 rows
 | **High** | 0.98 | 0.98 | 0.98 | 60 |
 | **Low** | 0.95 | 0.99 | 0.97 | 1237 |
 | **Medium** | 0.96 | 0.87 | 0.91 | 500 |
-| Overall Accuracy | | | 0.95 | 1707 |
+| Overall Accuracy | | | 0.95 | 1797 |
 
 **Confusion Matrix**
 | | Predicted High Class | Predicted Low Class | Predicted Medium class |
@@ -279,6 +281,17 @@ This was trained on 8,985 rows
 | **Actual High Class** | **50** | 1 | 0 |
 | **Actual Low Class** | 0 | **1221** | 16 |
 | **Actual Medium class** | 1 | 66 | **433** |
+
+**F1 Score by country**
+| Country | Total Samples (Test) | Weighted F1-Score | 
+| :--- | :---: | :---: |
+| **Zimbabwe** | *505* | *1.00* | 
+| **Malawi** | *447* | *0.9816* |
+| **Lesotho** | *351* | *0.8030* |
+| **Eswatini** | *494* | *0.9756* |
+
+>  **Key Insight (The "Perfect Data" Warning):** While achieving a mathematically flawless **100% F1-Score in Zimbabwe** appears initially impressive, it serves as a massive analytical red flag. By aggressively dropping the noisiest and most confusing rows, Cleanlab has created an artificially clean validation environment. Our critical hypothesis going into the final submission is that the test set will still contain those real-world, messy edge cases. If so, this localized "perfection" is likely a symptom of severe overfitting to a sanitized distribution, which may hinder the model's ability to generalize on the leaderboard. Furthermore, Lesotho's persistent underperformance proves that underlying class imbalance cannot be resolved simply by dropping noisy rows.
+
 </details>
 
 ### 8.3 Submission File Performance on Leaderboard
@@ -286,21 +299,40 @@ Blending Weight : 0.5
 
 | Submission | Public Leaderboard | Private Leaderboard |
 |---|---:|---:|
-| Base Ensembled Submission | 89.2531213 | 88.4738645 |
-| Cleaned Ensembled Submission | 88.7188694 | 88.2349274 |
-| Base+cleaned Blended Submission  | 89.1167192 | 88.3463601 |
+| Base Ensembled Submission | 0.892531213 | 0.884738645 |
+| Cleaned Ensembled Submission | 0.887188694 | 0.882349274 |
+| Base+cleaned Blended Submission  | 0.891167192 | 0.883463601 |
 
 ## 9.DISCUSSION AND CONCLUSION
 
-During the evaluation phase, an advanced Confident Learning pipeline (Cleanlab) was utilized to identify and drop 633 highly disputed, noisy rows from the training set. Initially, this appeared highly successful: the local Out-Of-Fold Weighted F1-Score surged from **88.91** (Base) to **94.96** (Cleaned). 
+During the evaluation phase, an advanced Confident Learning pipeline (Cleanlab) was utilized to identify and drop 633 highly disputed, noisy rows from the training set. Initially, this appeared highly successful: the local Out-Of-Fold Weighted F1-Score surged from **88.91%** (Base) to **94.96%** (Cleaned). 
 
 However, evaluating these models on the unseen test set revealed a classic case of **distribution shift**:
-* **The Base Ensemble** (trained on raw, noisy data) scored the highest on the Private Leaderboard (**88.47**).
-* **The Cleaned Ensemble** (trained on purified data) saw a performance drop on the Private Leaderboard (**88.23**).
+* **The Base Ensemble** (trained on raw, noisy data) scored the highest on the Private Leaderboard (**88.47%**).
+* **The Cleaned Ensemble** (trained on purified data) saw a performance drop on the Private Leaderboard (**88.23%**).
 
 **The Key Takeaway:** The hidden test set inherently contained the exact same human errors, edge cases, and noise as the raw training data. By aggressively dropping the "confusing" rows, the Cleaned models overfit to a perfect distribution that did not actually exist in the real world. They effectively "forgot" how to predict messy edge cases. 
 
 Ultimately, the most robust strategy was to rely on the **Base Ensembled Submission** (anchored by the `RandomForest_Patterns` model), which successfully learned to navigate the noise, proving that for real-world survey data, a model's ability to generalize to messiness is often more valuable than achieving a perfect local validation score on sanitized data.
 
+## 10.Conclusion & Future Directions
+
+Predicting the Financial Health Index (FHI) of SMEs based on self-reported survey data presents a unique machine learning challenge. Unlike structured financial data, human survey responses are inherently noisy, subjective, and prone to mathematical contradictions. 
+
+While the engineered pipeline successfully extracted macroscopic patterns and achieved a highly competitive **88.47 Private Leaderboard Score**, a critical retrospective reveals several avenues for future optimization:
+
+### What Could Be Improved (Next Steps)
+1. **Handling Severe Class Imbalance (High Class):**
+   While our overall F1-score was strong, the model struggled to recall `High Class` (High Distress) due to a severe lack of support (only 94 instances in the test split). Future iterations should move beyond standard SMOTE and experiment with alternative algorithms that would penalize misclassifications of the minority class.
+2. **Adversarial Validation for Distribution Shift:**
+   The discrepancy between our Cleanlab local validation scores and the Leaderboard highlighted a distinct distribution shift. Implementing an **Adversarial Validation** step (training a classifier to distinguish between the train and test sets) would help pinpoint exactly which features are causing the shift, allowing us to drop them and improve real-world generalization.
+3. **Aggressive Feature Pruning (SHAP):**
+   Our custom transformers generated dozens of meta-features (K-Means probabilities, PCA dimensions). While these boosted performance, they also introduced dimensionality noise. Running a rigorous **SHAP (SHapley Additive exPlanations)** analysis or Permutation Importance step could identify and prune zero-contribution features, speeding up inference and reducing the risk of overfitting.
+4. **Algorithmic Fairness & Bias Mitigation (Fairlearn):**
+   Given that our dataset relies heavily on sensitive demographic "Structural Modifiers" (`owner_sex`, `owner_age`, and `country`), there is an inherent risk that historical systemic biases (e.g., unequal access to formal credit for female business owners) could be encoded into the Financial Health predictions. A crucial next step would be integrating a framework like **Fairlearn** or **Aequitas** to mathematically audit the model. By evaluating metrics like *Demographic Parity* and *Equalized Odds*, and applying fairness constraints during the Optuna optimization phase, we could ensure the model does not disproportionately misclassify or penalize vulnerable SME subgroups.
+5. **Navigating the Ensemble Loss Landscape:**
+   While Optuna successfully discovered highly competitive fractional weights for our models, its underlying TPE (Tree-structured Parzen Estimator) algorithm is inherently stochastic and can occasionally settle in local optima. It is highly probable that a slightly superior weight combination exists. Future pipelines could bypass scalar weight optimization entirely by utilizing **Stacking Generalization**—training a robust meta-learner (such as a Logistic Regression or a shallow Neural Network) directly on the Out-Of-Fold (OOF) probabilities to learn complex, non-linear relationships between the base models.
+
+**Final Thought:** This project reinforced a vital Data Science paradigm: *Perfecting the data distribution in local validation is counterproductive if the real-world deployment data remains messy.* The winning strategy was not a complex hedge or a sanitized dataset, but rather trusting the robust, noise-tolerant generalizations of the raw Base Ensemble. Ultimately, it proved that in domains reliant on subjective human survey data, a model's ability to navigate inherent noise is far more valuable than a mathematically purified training set.
 
 
