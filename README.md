@@ -314,6 +314,16 @@ Blending Weight : 0.5
   </table>
 </p>
 
+#### 8.4.2 SHAP Explainer based on the best model
+
+<p align="center">
+  <table>
+    <tr>
+      <td align="center"><img src="assets/overall_class_imbalance.png" width="400"></td>
+      <td align="center"><img src="assets/country_class_imbalance.png" width="400"></td>
+    </tr>
+  </table>
+</p>
 
 ## 9.DISCUSSION AND CONCLUSION
 
