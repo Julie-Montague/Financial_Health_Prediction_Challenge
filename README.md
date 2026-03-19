@@ -31,6 +31,7 @@ FHI_Prediction/
 ├── 📂 Data/                   # Raw datasets
 │  ├─ Train.csv
 │  ├─ Test.csv
+├── 📂 assets/                 #saved plots
 ├── 📂 FHI_Models/             # Saved .joblib models and .json Optuna weights
 ├── 📄 Modelling_Final.ipynb   # Core pipeline: Training, Cleanlab, and Optuna tuning
 ├── 📄 Submission_Final.ipynb  # Inference pipeline: Loads saved models/weights for fast prediction
