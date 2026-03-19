@@ -221,9 +221,9 @@ The final step of the pipeline mitigates the risks of both underfitting and over
 This was trained on the full dataset (9618 rows)
 | Model | F1 Weighted | Ensemble Weight Assigned |
 |---|---|---:|
-| RandomForest_Patterns  | 0.889182 |  0.7105824251537074 |
-| ExtraTrees_Standard  |  0.887962 | 0.05200313738932137 |
-| ExtraTrees_Patterns | 0.887536 |  0.23741443745697116 |
+| RandomForest_Patterns  | 0.89 |  0.71 |
+| ExtraTrees_Standard  |  0.89 | 0.05 |
+| ExtraTrees_Patterns | 0.89 |  0.24 |
 
 <details>
 <summary><strong>Click to expand classification reports</strong></summary>
@@ -246,10 +246,10 @@ This was trained on the full dataset (9618 rows)
 **F1 Score by country**
 | Country | Total Samples (Test) | Weighted F1-Score | Note |
 | :--- | :---: | :---: | :--- |
-| **Zimbabwe** | *511* | *0.9630* | *Highest baseline accuracy.* |
-| **Malawi** | *510* | *0.9170* |  |
-| **Lesotho** | *369* | *0.7447* | *Warning: Extremely low support for Class 'High'.* |
-| **Eswatini** | *534* | *0.8965* |  |
+| **Zimbabwe** | *511* | *0.96* | *Highest baseline score.* |
+| **Malawi** | *510* | *0.92* |  |
+| **Lesotho** | *369* | *0.74* | *Extremely low support for Class 'High'.* |
+| **Eswatini** | *534* | *0.90* |  |
 
 
 > **Key Insight:** While the model remains relatively stable across borders, variations in the Weighted F1-Score are largely driven by severe class imbalances at the local level. For example, slicing our already rare `High` tier (only 94 total samples) across four countries leaves regions like Lesotho with statistically insignificant support for that specific class, inherently dragging down its localized weighted average.
@@ -260,9 +260,9 @@ This was trained on the full dataset (9618 rows)
 This was trained on 8,985 rows
 | Model | F1 Weighted | Ensemble Weight Assigned |
 |---|---|---:|
-| ExtraTrees_Standard  | 0.949658 | 0.4566714412265409 |
-| ExtraTrees_Patterns  | 0.948519 | 0.24944312727789425 |
-| XGBoost_Standard | 0.945441 |  0.29388543149556484 |
+| ExtraTrees_Standard  | 0.95 | 0.46 |
+| ExtraTrees_Patterns  | 0.95 | 0.25 |
+| XGBoost_Standard | 0.95 |  0.30 |
 
 <details>
 <summary><strong>Click to expand classification reports</strong></summary>
@@ -273,7 +273,7 @@ This was trained on 8,985 rows
 | **High** | 0.98 | 0.98 | 0.98 | 60 |
 | **Low** | 0.95 | 0.99 | 0.97 | 1237 |
 | **Medium** | 0.96 | 0.87 | 0.91 | 500 |
-| Overall Accuracy | | | 0.95 | 1797 |
+|  | | |  | 1797 |
 
 **Confusion Matrix**
 | | Predicted High Class | Predicted Low Class | Predicted Medium class |
@@ -286,9 +286,9 @@ This was trained on 8,985 rows
 | Country | Total Samples (Test) | Weighted F1-Score | 
 | :--- | :---: | :---: |
 | **Zimbabwe** | *505* | *1.00* | 
-| **Malawi** | *447* | *0.9816* |
-| **Lesotho** | *351* | *0.8030* |
-| **Eswatini** | *494* | *0.9756* |
+| **Malawi** | *447* | *0.98* |
+| **Lesotho** | *351* | *0.80* |
+| **Eswatini** | *494* | *0.98* |
 
 >  **Key Insight (The "Perfect Data" Warning):** While achieving a mathematically flawless **100% F1-Score in Zimbabwe** appears initially impressive, it serves as a massive analytical red flag. By aggressively dropping the noisiest and most confusing rows, Cleanlab has created an artificially clean validation environment. Our critical hypothesis going into the final submission is that the test set will still contain those real-world, messy edge cases. If so, this localized "perfection" is likely a symptom of severe overfitting to a sanitized distribution, which may hinder the model's ability to generalize on the leaderboard. Furthermore, Lesotho's persistent underperformance proves that underlying class imbalance cannot be resolved simply by dropping noisy rows.
 
