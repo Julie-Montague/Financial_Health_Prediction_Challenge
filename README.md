@@ -303,6 +303,18 @@ Blending Weight : 0.5
 | Cleaned Ensembled Submission | 0.887188694 | 0.882349274 |
 | Base+cleaned Blended Submission  | 0.891167192 | 0.883463601 |
 
+### 8.4 Model Intepretability
+#### 8.4.1 Global Importance
+
+<p align="center">
+  <table>
+    <tr>
+      <td align="center"><img src="assets/Global_feat_importance.png" width="400"></td>
+    </tr>
+  </table>
+</p>
+
+
 ## 9.DISCUSSION AND CONCLUSION
 
 During the evaluation phase, an advanced Confident Learning pipeline (Cleanlab) was utilized to identify and drop 633 highly disputed, noisy rows from the training set. Initially, this appeared highly successful: the local Out-Of-Fold Weighted F1-Score surged from **88.91%** (Base) to **94.96%** (Cleaned). 
