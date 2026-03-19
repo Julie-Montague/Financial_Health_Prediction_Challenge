@@ -225,6 +225,8 @@ This was trained on the full dataset (9618 rows)
 | ExtraTrees_Standard  |  88.7962 | 0.05200313738932137 |
 | ExtraTrees_Patterns | 88.7536 |  0.23741443745697116 |
 
+<details>
+<summary><strong>Click to expand classification reports</strong></summary>
 **Classification Report (Weighted F1: 0.89)**
 | Class | Precision | Recall | F1-Score | Support (Rows) |
 | :--- | :--- | :--- | :--- | :--- |
@@ -239,6 +241,7 @@ This was trained on the full dataset (9618 rows)
 | **Actual High Class** | **58** | 4 | 32 |
 | **Actual Low Class** | 1 | **1231** | 24 |
 | **Actual Medium class** | 4 | 133 | **437** |
+</details>
 
 ### 8.2 Top 3 Models on cleaned data ( Out of the original 9618 rows, 633 rows were dropped)
 This was trained on 8,985 rows
@@ -248,6 +251,8 @@ This was trained on 8,985 rows
 | ExtraTrees_Patterns  | 94.8519 | 0.24944312727789425 |
 | XGBoost_Standard | 94.5441 |  0.29388543149556484 |
 
+<details>
+<summary><strong>Click to expand classification reports</strong></summary>
 **Classification Report (Weighted F1: 0.95)**
 | Class | Precision | Recall | F1-Score | Support (Rows) |
 | :--- | :--- | :--- | :--- | :--- |
@@ -262,6 +267,7 @@ This was trained on 8,985 rows
 | **Actual High Class** | **50** | 1 | 0 |
 | **Actual Low Class** | 0 | **1221** | 16 |
 | **Actual Medium class** | 1 | 66 | **433** |
+</details>
 
 ### 8.3 Submission File Performance on Leaderboard
 Blending Weight : 0.5
