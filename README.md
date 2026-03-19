@@ -159,10 +159,14 @@ For every base algorithm tested (**Random Forest**, **Extra Trees**, **XGBoost**
 To generate the final predictions, the pipeline moves away from relying on a single algorithm and instead utilizes a highly optimized **Weighted Soft Voting Ensemble**. 
 
 #### 4.1. Top-K Filtering (Preventing Ensemble Dilution)
-A common pitfall in machine learning is averaging *all* trained models together, which allows weaker algorithms to drag down the accuracy of the best ones. To prevent this, the pipeline strictly enforces a **Top-K cutoff**. Only the elite, top-performing models (based strictly on Out-Of-Fold weighted F1 validation scores) are granted voting rights in the final ensemble.
+A common pitfall in machine learning is averaging *all* trained models together, which allows weaker algorithms to lower the accuracy of the best ones. To prevent this, the pipeline strictly enforces a **Top-K cutoff**. Only the top-performing models (based strictly on Out-Of-Fold weighted F1 validation scores) are used in the final ensemble.
 
 #### 4.2. Optuna Weight Optimization
-Instead of using a naive simple average (e.g., giving LightGBM, XGBoost, and CatBoost an equal 33% say), the engine leverages **Optuna (Tree-structured Parzen Estimator)**. Optuna runs hundreds of trials on the validation probabilities to discover the mathematically perfect fractional weights. For example, if LightGBM captured a vital macroeconomic trend, Optuna might dynamically assign it 55% voting power, while relegating CatBoost to 15%. 
+Instead of using a naive simple average (e.g., giving LightGBM, XGBoost, and CatBoost an equal 33% say), the engine leverages **Optuna (Tree-structured Parzen Estimator)**. Optuna runs hundreds of trials on the validation probabilities to discover the mathematically perfect fractional weights. For example, if LightGBM captured a vital macroeconomic trend, Optuna might dynamically assign it 55% voting power, while relegating CatBoost to 15%.
+
+> **⚠️ The Optuna Caveat (Handling Non-Determinism):** > It is important to note that Optuna’s Tree-structured Parzen Estimator (TPE) is inherently stochastic. Because it explores the hyperparameter space randomly, it can arrive at slightly different final weights on every run - even if the underlying models and their validation scores do not change. Furthermore, in an ensemble, multiple distinct weight combinations can frequently yield the exact same optimal F1-score.
+
+> **The Solution:** To prevent this non-determinism from altering our final submission, we treated Optuna purely as an exploratory tool. Once the absolute highest cross-validation score was achieved, the resulting optimal weights were frozen, exported to a `.json` file, and hardcoded into the final submission notebook to guarantee 100% reproducibility.
 
 #### 4.3. Probability Fusion & Final Argmax
 Once the "Golden Weights" are discovered, the pipeline extracts the raw continuous probabilities (confidence levels) from the Top K models on the unseen Test Set. These probabilities are multiplied by their respective Optuna weights and stacked together. Finally, the default `Argmax` function collapses this fused probability matrix into the final discrete predictions (`Low`, `Medium`, `High`), yielding a submission that is significantly more robust than any individual model could achieve alone.
@@ -188,13 +192,25 @@ This was trained on 8,985 rows
 | XGBoost_Standard | 94.5441 |  0.29388543149556484 |
 
 ### 5.4 Submission File Performance on Leaderboard
+Blending Weight : 0.5
+
 | Submission | Public Leaderboard | Private Leaderboard |
 |---|---:|---:|
-| Base Blended Submission | 89.2531213 | 88.4738645 |
+| Base Ensembled Submission | 89.2531213 | 88.4738645 |
+| Cleaned Ensembled Submission | 88.7188694 | 88.2349274 |
 | Base+cleaned Blended Submission  | 89.1167192 | 88.3463601 |
 
 ## 6.DISCUSSION AND CONCLUSION
 
+During the evaluation phase, an advanced Confident Learning pipeline (Cleanlab) was utilized to identify and drop 633 highly disputed, noisy rows from the training set. Initially, this appeared highly successful: the local Out-Of-Fold Weighted F1-Score surged from **88.91** (Base) to **94.96** (Cleaned). 
+
+However, evaluating these models on the unseen test set revealed a classic case of **distribution shift**:
+* **The Base Ensemble** (trained on raw, noisy data) scored the highest on the Private Leaderboard (**88.47**).
+* **The Cleaned Ensemble** (trained on purified data) saw a performance drop on the Private Leaderboard (**88.23**).
+
+**The Key Takeaway:** The hidden test set inherently contained the exact same human errors, edge cases, and noise as the raw training data. By aggressively dropping the "confusing" rows, the Cleaned models overfit to a perfect distribution that did not actually exist in the real world. They effectively "forgot" how to predict messy edge cases. 
+
+Ultimately, the most robust strategy was to rely on the **Base Ensembled Submission** (anchored by the `RandomForest_Patterns` model), which successfully learned to navigate the noise, proving that for real-world survey data, a model's ability to generalize to messiness is often more valuable than achieving a perfect local validation score on sanitized data.
 
 
 
