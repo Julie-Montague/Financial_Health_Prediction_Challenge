@@ -181,7 +181,7 @@ flowchart LR
 * **Dynamic Correlation Drop:** A custom transformer automatically calculates a correlation matrix during training and drops heavily collinear features (Pearson > 0.90). This reduces dimensionality and prevents tree-based models from overfitting on redundant information.
 
 ### 6.4. Confident Learning 
-* **Cleanlab Label Purification:** Survey data is full of human error. By using a highly constrained, shallow LightGBM "Judge," the pipeline flags rows where the Out-Of-Fold probability violently disagrees with the human label. By *dropping* these mathematically improbable rows (rather than attempting to relabel them), the final models learn on a 100% purified, contradiction-free dataset.
+* **Cleanlab Label Purification:** Survey data is full of human error. By using a highly constrained, shallow LightGBM "Judge," the pipeline flags rows where the Out-Of-Fold probability violently disagrees with the human label. By *dropping* these mathematically improbable rows (rather than attempting to relabel them), the final models learn on a purified, contradiction-free dataset.
 
 ## 7. MODEL EVALUATION AND SELECTION PIPELINE
 ### 7.1. Stratified Validation & Early Stopping
@@ -206,12 +206,12 @@ A common pitfall in machine learning is averaging *all* trained models together,
 #### 7.4.2. Optuna Weight Optimization
 Instead of using a naive simple average (e.g., giving LightGBM, XGBoost, and CatBoost an equal 33% say), the engine leverages **Optuna (Tree-structured Parzen Estimator)**. Optuna runs hundreds of trials on the validation probabilities to discover the mathematically perfect fractional weights. For example, if LightGBM captured a vital macroeconomic trend, Optuna might dynamically assign it 55% voting power, while relegating CatBoost to 15%.
 
-> **⚠️ The Optuna Caveat (Handling Non-Determinism):** > It is important to note that Optuna’s Tree-structured Parzen Estimator (TPE) is inherently stochastic. Because it explores the hyperparameter space randomly, it can arrive at slightly different final weights on every run - even if the underlying models and their validation scores do not change. Furthermore, in an ensemble, multiple distinct weight combinations can frequently yield the exact same optimal F1-score.
+> **The Optuna Caveat (Handling Non-Determinism):** > It is important to note that Optuna’s Tree-structured Parzen Estimator (TPE) is inherently stochastic. Because it explores the hyperparameter space randomly, it can arrive at slightly different final weights on every run - even if the underlying models and their validation scores do not change. Furthermore, in an ensemble, multiple distinct weight combinations can frequently yield the exact same optimal F1-score.
 
 > **The Solution:** To prevent this non-determinism from altering our final submission, we treated Optuna purely as an exploratory tool. Once the absolute highest cross-validation score was achieved, the resulting optimal weights were frozen, exported to a `.json` file, and hardcoded into the final submission notebook to guarantee 100% reproducibility.
 
 #### 7.4.3. Probability Fusion & Final Argmax
-Once the "Golden Weights" are discovered, the pipeline extracts the raw continuous probabilities (confidence levels) from the Top K models on the unseen Test Set. These probabilities are multiplied by their respective Optuna weights and stacked together. Finally, the default `Argmax` function collapses this fused probability matrix into the final discrete predictions (`Low`, `Medium`, `High`), yielding a submission that is significantly more robust than any individual model could achieve alone.
+Once the optimal weights are discovered, the pipeline extracts the raw continuous probabilities (confidence levels) from the Top K models on the unseen Test Set. These probabilities are multiplied by their respective Optuna weights and stacked together. Finally, the default `Argmax` function collapses this fused probability matrix into the final discrete predictions (`Low`, `Medium`, `High`), yielding a submission that is significantly more robust than any individual model could achieve alone.
 
 #### 7.4.4. The Hedged Fusion (Raw + Purified Blending)
 The final step of the pipeline mitigates the risks of both underfitting and overfitting to noise. We generate two separate Optuna-weighted ensembles: one trained on the **Raw Data** and one trained on the **Cleanlab Purified Data**. By fusing their probabilities together (e.g., a 50% Raw / 50% Clean split), we create a "Hedged Ensemble." The Raw models act as a grounded anchor to the true, messy real-world distribution, while the Purified models act as a precise mathematical corrector, pulling the predictions back into bounds when the raw models become overconfident on tricky, noisy edge cases.
@@ -225,6 +225,20 @@ This was trained on the full dataset (9618 rows)
 | ExtraTrees_Standard  |  88.7962 | 0.05200313738932137 |
 | ExtraTrees_Patterns | 88.7536 |  0.23741443745697116 |
 
+**Classification Report (Weighted F1: 0.89)**
+| Class | Precision | Recall | F1-Score | Support (Rows) |
+| :--- | :--- | :--- | :--- | :--- |
+| **High** | 0.92 | 0.62 | 0.74 | 94 |
+| **Low** | 0.90 | 0.98 | 0.94 | 1256 |
+| **Medium** | 0.89 | 0.76 | 0.82 | 574 |
+| Overall Accuracy | | | 0.90 | 1924 |
+
+| | Predicted High Class | Predicted Low Class | Predicted Medium class |
+| :--- | :---: | :---: | :---: |
+| **Actual High Class** | **58** | 4 | 32 |
+| **Actual Low Class** | 1 | **1231** | 24 |
+| **Actual Medium class** | 4 | 133 | **437** |
+
 ### 8.2 Top 3 Models on cleaned data ( Out of the original 9618 rows, 633 rows were dropped)
 This was trained on 8,985 rows
 | Model | F1 Weighted | Ensemble Weight Assigned |
@@ -232,6 +246,20 @@ This was trained on 8,985 rows
 | ExtraTrees_Standard  | 94.9658 | 0.4566714412265409 |
 | ExtraTrees_Patterns  | 94.8519 | 0.24944312727789425 |
 | XGBoost_Standard | 94.5441 |  0.29388543149556484 |
+
+**Classification Report (Weighted F1: 0.95)**
+| Class | Precision | Recall | F1-Score | Support (Rows) |
+| :--- | :--- | :--- | :--- | :--- |
+| **High** | 0.98 | 0.98 | 0.98 | 60 |
+| **Low** | 0.95 | 0.99 | 0.97 | 1237 |
+| **Medium** | 0.96 | 0.87 | 0.91 | 500 |
+| Overall Accuracy | | | 0.95 | 1707 |
+
+| | Predicted High Class | Predicted Low Class | Predicted Medium class |
+| :--- | :---: | :---: | :---: |
+| **Actual High Class** | **50** | 1 | 0 |
+| **Actual Low Class** | 0 | **1221** | 16 |
+| **Actual Medium class** | 1 | 66 | **433** |
 
 ### 8.3 Submission File Performance on Leaderboard
 Blending Weight : 0.5
