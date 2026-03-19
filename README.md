@@ -42,10 +42,10 @@ Compute / Hardware: Standard CPU Runtime. System RAM: Minimum 16GB recommended d
 
 #### Execution Path :
 **Option A: Full Pipeline Retrain (Modelling_Final.ipynb)**
-Run this notebook to execute the entire end-to-end architecture. This will ingest raw data, run the MICE imputations, execute Phase 1 (Raw Models), trigger Cleanlab label purification, drop noisy rows, execute Phase 2 (Clean Models) and dynamically save the .joblib models and .json weights in the FHI_Models folder. (Estimated Runtime: ~15 minutes when tuning=False, ~3 hours when tuning=True).
+  - Run this notebook to execute the entire end-to-end architecture. This will ingest raw data, run the MICE imputations, execute Phase 1 (Raw Models), trigger Cleanlab label purification, drop noisy rows, execute Phase 2 (Clean Models) and dynamically save the .joblib models and .json weights in the FHI_Models folder. (Estimated Runtime: ~15 minutes when tuning=False, ~3 hours when tuning=True).
 
 **Option B: Fast Inference (Submission_Final.ipynb)**
-Run this notebook if you simply want to verify the submission. This notebook skips all training and Optuna tuning. It strictly loads the frozen joblib models and the pre-calculated json weights to perform a rapid Hedged Probability Fusion on the unseen test.csv data. (Estimated Runtime: < 2 minutes).
+  - Run this notebook if you simply want to verify the submission. This notebook skips all training and Optuna tuning. It strictly loads the frozen joblib models and the pre-calculated json weights to perform a rapid Hedged Probability Fusion on the unseen test.csv data. (Estimated Runtime: < 2 minutes).
 
 ## 5. DATA DESCRIPTION
 The dataset comprises real-world survey responses collected from small and medium-sized enterprise (SME) owners across four Southern African nations: Eswatini, Lesotho, Malawi, and Zimbabwe.
@@ -82,9 +82,6 @@ To counteract this and successfully capture the rare "High" performing SMEs, thi
 2. **Confident Learning (Cleanlab):** Dropping highly-disputed, noisy majority-class survey responses rather than allowing them to dilute the tree's learning process.
 
 ### 5.3 Data Dictionary
-
-### 📚 Data Dictionary
-
 <details>
 <summary><strong>Click to expand the full dataset variable definitions</strong></summary>
 
@@ -130,6 +127,7 @@ To counteract this and successfully capture the rare "High" performing SMEs, thi
 | **Psychological** | `motivation_make_more_money` | Primary motivation for running the business is financial gain. |
 
 </details>
+
 ## 6. DATA PREPROCESSING AND FEATURE ENGINEERING
 ```mermaid
 flowchart LR
