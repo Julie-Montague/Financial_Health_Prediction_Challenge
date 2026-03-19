@@ -175,23 +175,23 @@ The final step of the pipeline mitigates the risks of both underfitting and over
 This was trained on the full dataset (9618 rows)
 | Model | F1 Weighted | Ensemble Weight Assigned |
 |---|---|---:|
-| RandomForest_Patterns  | 88.9182 |  0.6984 |
-| ExtraTrees_Standard  |  88.7962 | 0.0005 |
-| ExtraTrees_Patterns | 88.7536 |  0.3011 |
+| RandomForest_Patterns  | 88.9182 |  0.7105824251537074 |
+| ExtraTrees_Standard  |  88.7962 | 0.05200313738932137 |
+| ExtraTrees_Patterns | 88.7536 |  0.23741443745697116 |
 
-### 5.1 Top 3 Models on cleaned data ( Out of the original 9618 rows, 638 rows were dropped)
-This was trained on 8,980 rows
+### 5.1 Top 3 Models on cleaned data ( Out of the original 9618 rows, 633 rows were dropped)
+This was trained on 8,985 rows
 | Model | F1 Weighted | Ensemble Weight Assigned |
 |---|---|---:|
-| RandomForest_Patterns  | 94.8051 | 0.445 |
-| RandomForest_Standard  | 94.7579 | 0.331 |
-| ExtraTrees_Patterns | 94.7498 |  0.224 |
+| ExtraTrees_Standard  | 94.9658 | 0.4566714412265409 |
+| ExtraTrees_Patterns  | 94.8519 | 0.24944312727789425 |
+| XGBoost_Standard | 94.5441 |  0.29388543149556484 |
 
 ### 5.4 Submission File Performance on Leaderboard
 | Submission | Public Leaderboard | Private Leaderboard |
 |---|---:|---:|
-| Base Blended Submission | 89.2907738 | 88.4738645 |
-| Base+cleaned Blended Submission  | 89.4169985 | 88.7214611 |
+| Base Blended Submission | 89.2531213 | 88.4738645 |
+| Base+cleaned Blended Submission  | 89.1167192 | 88.3463601 |
 
 ## 6.DISCUSSION AND CONCLUSION
 
