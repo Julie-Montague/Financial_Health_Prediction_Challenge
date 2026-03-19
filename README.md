@@ -81,8 +81,9 @@ To counteract this and successfully capture the rare "High" performing SMEs, thi
 ### 5.3 Data Dictionary
 <Details>
 <summary><strong> Click to expand the full Data Dictionary</strong></summary>
+  
 | Category | Feature Name | Description |
-|---|---|---|
+| :--- | :--- | :--- |
 | Demographics | country | The country of operation (Eswatini, Lesotho, Malawi, Zimbabwe). |
 | Demographics | owner_age | The age of the primary business owner. |
 | Demographics | owner_sex | The gender of the primary business owner. |
