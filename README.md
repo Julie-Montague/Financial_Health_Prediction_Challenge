@@ -87,8 +87,8 @@ To counteract this and successfully capture the rare "High" performing SMEs, thi
 
 | Category | Feature Name | Description |
 | :--- | :--- | :--- |
-| **Meta/Target** | `ID` | Unique identifier for the surveyed SME. |
-| **Meta/Target** | `Target` | The Financial Health Index tier (`Low`, `Medium`, `High`). |
+| **Meta** | `ID` | Unique identifier for the surveyed SME. |
+| **Target** | `Target` | The Financial Health Index tier (`Low`, `Medium`, `High`). |
 | **Demographics** | `country` | The country of operation (Eswatini, Lesotho, Malawi, Zimbabwe). |
 | **Demographics** | `owner_age` | The age of the primary business owner. |
 | **Demographics** | `owner_sex` | The gender of the primary business owner. |
@@ -168,8 +168,8 @@ flowchart LR
     class Sub2 target;
 ```
 ### 6.1. Robust Data Sanitization
-* **Country-Aware Winsorization:** Because Eswatini, Lesotho, Malawi, and Zimbabwe have vastly different currencies and inflation rates, extreme financial outliers were capped at the 99th percentile *per country*. This neutralized data-entry typos without erasing legitimate high-earning businesses.
-* **Logical Bounding:** Corrected impossible survey contradictions automatically (e.g., ensuring a business's age could not mathematically exceed the owner's working age).
+* **Country-Aware Winsorization:** Because Eswatini, Lesotho, Malawi, and Zimbabwe have vastly different currencies and inflation rates, extreme financial outliers were capped at the 99th percentile *per country*. This neutralized data-entries without erasing legitimate high-earning businesses.
+* **Logical Bounding:** Corrected impossible survey contradictions automatically (e.g., ensuring a business's age could not be negative).
 
 ### 6.2. Feature Engineering & Unsupervised Extraction
 * **Domain-Driven Base Signals:** Translated raw survey text into mathematical indices. Created custom metrics like the `Master_Formalization_Index` (tracking tax and record-keeping compliance) and `Liquidity_Distress_Index` (multiplying high cash burn rates by negative psychological outlooks).
