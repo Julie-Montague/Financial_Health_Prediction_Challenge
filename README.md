@@ -319,6 +319,7 @@ Blending Weight : 0.5
 <p align="center">
   <table>
     <tr>
+      <td align="center"><img src="assets/SHAP_Impact_High.png" width="400"></td>
       <td align="center"><img src="assets/SHAP_Impact_Medium.png" width="400"></td>
       <td align="center"><img src="assets/SHAP_Impact_Low.png" width="400"></td>
     </tr>
