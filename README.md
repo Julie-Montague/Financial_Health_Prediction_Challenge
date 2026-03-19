@@ -28,7 +28,9 @@ To maintain a clean and modular codebase, the project is structured as follows:
 ```text
 FHI_Prediction/
 ├── 📂 Custom_Transformers/    # Extracted .py files for Scikit-Learn custom classes
-├── 📂 Data/                   # Raw datasets (train.csv, test.csv)
+├── 📂 Data/                   # Raw datasets
+│  ├─ Train.csv
+│  ├─ Test.csv
 ├── 📂 FHI_Models/             # Saved .joblib models and .json Optuna weights
 ├── 📄 Modelling_Final.ipynb   # Core pipeline: Training, Cleanlab, and Optuna tuning
 ├── 📄 Submission_Final.ipynb  # Inference pipeline: Loads saved models/weights for fast prediction
