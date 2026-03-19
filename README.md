@@ -304,9 +304,10 @@ Blending Weight : 0.5
 | Base+cleaned Blended Submission  | 0.891167192 | 0.883463601 |
 
 ### 8.4 Model Intepretability
-#### 8.4.1 Global Importance
+#### 8.4.1 Global Importance (Top K Models Ensembled)
 
-Custom meta-features—specifically `insurance_access_score`, `digital_inclusion_score`, and `formal_finance_score`—completely dominate the top of the hierarchy. This proves that the model relied far more on a business's overarching macroeconomic positioning (their integration into formal financial networks) than on their raw, day-to-day operational metrics.
+Surprisingly, raw daily metrics like cash flow or revenue were not at the top. Instead, our custom-built access scores dominate the chart—specifically **Insurance Access**, **Digital Inclusion**, and **Formal Finance integration**. 
+The model learned that long-term SME survival isn't just about how much money a business makes today. It is about having a safety net (insurance) and being plugged into modern banking systems (digital tools and formal credit).
 
 <p align="center">
   <table>
