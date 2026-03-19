@@ -306,6 +306,8 @@ Blending Weight : 0.5
 ### 8.4 Model Intepretability
 #### 8.4.1 Global Importance
 
+Custom meta-features—specifically `insurance_access_score`, `digital_inclusion_score`, and `formal_finance_score`—completely dominate the top of the hierarchy. This proves that the model relied far more on a business's overarching macroeconomic positioning (their integration into formal financial networks) than on their raw, day-to-day operational metrics.
+
 <p align="center">
   <table>
     <tr>
@@ -315,6 +317,10 @@ Blending Weight : 0.5
 </p>
 
 #### 8.4.2 SHAP Explainer based on the best model
+
+By viewing the SHAP distributions across the three tiers, we confirm the model learned sound economic logic rather than random noise:
+* **The Drivers of 'High' Health (Left Chart):** High values (red dots) in `insurance_access_score` and `formal_finance_score` strongly push a business's prediction to the right, acting as the primary catalysts for a top-tier classification.
+* **The Drivers of 'Low' Health (Right Chart):** The model perfectly reverses this logic for distressed businesses. The absence of a safety net (e.g., a high value in `funeral_insurance_never_had`) clusters heavily to the right, actively pushing the prediction into the lowest tier. Conversely, strong insurance access (red dots) acts as a protective shield, pulling businesses sharply to the left and away from distress.
 
 <p align="center">
   <table>
