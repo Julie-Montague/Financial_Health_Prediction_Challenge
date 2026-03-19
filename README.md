@@ -79,6 +79,8 @@ To counteract this and successfully capture the rare "High" performing SMEs, thi
 2. **Confident Learning (Cleanlab):** Dropping highly-disputed, noisy majority-class survey responses rather than allowing them to dilute the tree's learning process.
 
 ### 5.3 Data Dictionary
+<Details>
+<summary><strong> Click to expand the full Data Dictionary</strong></summary>
 | Category | Feature Name | Description |
 |---|---|---|
 | Demographics | country | The country of operation (Eswatini, Lesotho, Malawi, Zimbabwe). |
@@ -108,6 +110,7 @@ To counteract this and successfully capture the rare "High" performing SMEs, thi
 | Psychological | attitude_stable_business_environment | Confidence in the stability of the local business environment. |
 | Psychological | attitude_satisfied_with_achievement | Personal satisfaction with business progress to date. |
 | Psychological | attitude_more_successful_next_year | Optimism about stronger business performance in the coming year. |
+</Details>
 
 ## 6. DATA PREPROCESSING AND FEATURE ENGINEERING
 ```mermaid
