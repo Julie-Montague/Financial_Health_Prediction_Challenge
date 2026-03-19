@@ -242,6 +242,16 @@ This was trained on the full dataset (9618 rows)
 | **Actual High Class** | **58** | 4 | 32 |
 | **Actual Low Class** | 1 | **1231** | 24 |
 | **Actual Medium class** | 4 | 133 | **437** |
+
+**F1 Score by country**
+| Country | Total Samples (Test) | Weighted F1-Score | Note |
+| :--- | :---: | :---: | :--- |
+| **Zimbabwe** | *[Insert #]* | *[Insert F1]* | *e.g., Highest baseline accuracy.* |
+| **Malawi** | *[Insert #]* | *[Insert F1]* | *e.g., Model slightly underperforms here.* |
+| **Lesotho** | *[Insert #]* | *[Insert F1]* | |
+| **Eswatini** | *[Insert #]* | *[Insert F1]* | *Warning: Extremely low support for Class 0.* |
+
+> **Key Insight:** While the model remains relatively stable across borders, slight variations in the Weighted F1-Score are largely driven by severe class imbalances at the local level. For example, slicing our already rare `High class` (94 total samples) across four countries leaves certain regions with statistically insignificant support for that specific tier.
 </details>
 
 ### 8.2 Top 3 Models on cleaned data ( Out of the original 9618 rows, 633 rows were dropped)
