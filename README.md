@@ -1,7 +1,7 @@
 # Financial_Health_Index_Prediction_Challenge
 https://zindi.africa/competitions/dataorg-financial-health-prediction-challenge
 
-## PROJECT OVERVIEW
+## Project Overview
 This project develops a machine learning pipeline to predict Financial Health Index (FHI) categories using structured financial and behavioral data.
 
 Built as part of a Zindi data science competition, the project focuses on:
@@ -9,13 +9,13 @@ Built as part of a Zindi data science competition, the project focuses on:
 - Handling imbalanced multi-class classification
 - Model interpretability using SHAP
 
-## KEY CONTRIBUTIONS
+## Key Contributions
 - Designed a full ML pipeline from preprocessing → feature engineering → model training → evaluation
 - Compared multiple models (LightGBM, XGBoost, CatBoost)
 - Implemented SHAP-based explainability for model interpretation
 - Optimized performance using F1-score for imbalanced classification
 
-## TECH STACK
+## Tech Stack
 - Python (pandas, numpy, sklearn)
 - LightGBM, XGBoost, CatBoost, RandomForest, ExtraTrees
 - SHAP (model interpretability)
