@@ -1,6 +1,36 @@
 # Financial_Health_Index_Prediction_Challenge
 https://zindi.africa/competitions/dataorg-financial-health-prediction-challenge
 
+## PROJECT OVERVIEW
+This project develops a machine learning pipeline to predict Financial Health Index (FHI) categories using structured financial and behavioral data.
+
+Built as part of a Zindi data science competition, the project focuses on:
+- End-to-end ML pipeline development
+- Handling imbalanced multi-class classification
+- Model interpretability using SHAP
+
+## KEY CONTRIBUTIONS
+- Designed a full ML pipeline from preprocessing → feature engineering → model training → evaluation
+- Compared multiple models (LightGBM, XGBoost, CatBoost)
+- Implemented SHAP-based explainability for model interpretation
+- Optimized performance using F1-score for imbalanced classification
+
+## TECH STACK
+- Python (pandas, numpy, sklearn)
+- LightGBM, XGBoost, CatBoost
+- SHAP (model interpretability)
+- Matplotlib / Seaborn (visualization)
+
+## Results
+- Achieved strong predictive performance on imbalanced data
+- Improved minority class detection using feature engineering and model tuning
+- Generated interpretable insights using SHAP plots
+
+---
+
+## 🔁 Reproducibility
+All experiments are fully reproducible via the provided scripts and pipeline structure.
+
 ## 1. INTRODUCTION
 The small and medium enterprise (SME) sector in Southern Africa represents the most critical frontier for economic development, employment creation, and social innovation. Across Eswatini, Lesotho, Zimbabwe, and Malawi, these businesses operate as the primary livelihood for millions, yet they remain fundamentally fragile and largely excluded from the formal financial systems that might otherwise provide stability during times of crisis. Traditional economic metrics, such as annual profit or gross revenue, are increasingly recognized as insufficient for capturing the actual well-being of an SME in a developing economy. Instead, a more nuanced understanding is required—one that considers the interdependencies between savings habits, debt management, resilience to idiosyncratic shocks, and the qualitative nature of financial inclusion. The Financial Health Index (FHI) addresses this need by providing a composite measure that classifies enterprises into Low, Medium, or High financial health. However, the construction of reliable machine learning models to predict the FHI is hampered by the nature of the primary data source: survey responses that are frequently incomplete, inconsistent, and influenced by a complex array of behavioral and cultural factors.
 
