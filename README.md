@@ -17,7 +17,7 @@ Built as part of a Zindi data science competition, the project focuses on:
 
 ## TECH STACK
 - Python (pandas, numpy, sklearn)
-- LightGBM, XGBoost, CatBoost
+- LightGBM, XGBoost, CatBoost, RandomForest, ExtraTrees
 - SHAP (model interpretability)
 - Matplotlib / Seaborn (visualization)
 
